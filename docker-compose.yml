@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_projectB
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: projectb_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata_projectB:/var/lib/postgresql/data
+
+volumes:
+  pgdata_projectB:
