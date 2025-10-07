@@ -1,39 +1,27 @@
 const pool = require('./index');
-
-async function createUser(id,username, password, avatar) {
-    const query = 'INSERT INTO users (id, username, password, avatar) VALUES ($1, $2, $3, $4) RETURNING *';
-    const values = [id, username, password, avatar];
-    const res = await pool.query(query, values);
-    return res.rows[0];     
-}
-
-async function updateUser(id, username, password, avatar) {
-    const query = 'UPDATE users SET username = $2, password = $3, avatar = $4 WHERE id = $1 RETURNING *';
-    const values = [id, username, password, avatar];
-    const res = await pool.query(query, values);
-    return res.rows[0];
-}
-async function deleteUser(id) {
-    const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
-    const values = [id];
-    const res = await pool.query(query, values);
-    return res.rows[0];
-}
-async function READUser(id) {
-    const query = 'SELECT * FROM users WHERE id = $1';
-    const values = [id];
-    const res = await pool.query(query, values);
-    return res.rows[0];
-}
-// ...existing code...
+const action = 'update';   //làm từng cái mệt quá để cái của nợ này muốn làm gì thì làm cho nhanh =))
 async function main() {
     try {
-        const user = await createUser(100, 'TestUser', 'testpass', 'testavatar.png');
-        console.log('User vừa tạo:', user);
+        if (action === 'create') {
+            const user = await createUser(106, 'user6', 'pass6', 'avatar6.png');
+            console.log('User vừa tạo:', user);
+        } else if (action === 'read') {
+            const user = await READUser(106);
+            console.log('User vừa đọc:', user);
+        } else if (action === 'update') {
+            const user = await updateUser(106, 'user6_updated', 'newpass6', 'newavatar6.png');
+            console.log('User sau khi update:', user);
+        } else if (action === 'delete') {
+            const user = await deleteUser(106);
+            console.log('User đã xóa:', user);
+        } else {
+            console.log('Không có thao tác phù hợp!');
+        }
     } catch (err) {
-        console.error('Lỗi:', err); // Sửa lại dòng này để log toàn bộ lỗi
+        console.error('Lỗi:', err);
     } finally {
         await pool.end();
     }
 }
+
 main();
